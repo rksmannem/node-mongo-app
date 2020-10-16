@@ -1,0 +1,3 @@
+docker run -it --rm --network mongonw --name mongodb -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=password mongo
+
+docker exec -it mongodb mongo -u root -p password --authenticationDatabase admin 
