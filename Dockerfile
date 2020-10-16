@@ -1,17 +1,20 @@
 FROM node:12-alpine
 
+LABEL author="Ramakrishna Mannem"
+
+ENV PORT=3000
+ENV NODE_ENV=production
+
 # create and app directory
 WORKDIR /usr/src/app
 
-RUN chown -R node:node /usr/src/app
+COPY package*.json ./
 
-COPY package*.json .
+RUN npm ci
 
-USER node
 
-RUN npm install
+COPY . ./
 
-# copy all app files to the container
-COPY --chown=node:node . .
+EXPOSE $PORT
 
 CMD ["npm", "start"]
