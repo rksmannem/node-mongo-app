@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-
-const path = require('path')
-require('dotenv').config({path: path.resolve(__dirname, '../.env')});
+// const mongoose = require('mongoose');
+const mongo = require('mongodb');
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const {
     MONGO_USER,
@@ -16,11 +16,12 @@ const options = {
     connectTimeoutMS: 10000,
 };
 
+const MongoClient = mongo.MongoClient;
 const url = `mongodb://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}:${MONGO_PORT}/?authSource=admin`;
 
-// console.log("uri:", url)
 
-client = function () {
+// connect to mongo db using mongoose
+/* mongooseClient = function () {
     mongoose.connect(url, options).
         then(function () {
             console.log(`Mongodb connected!!!`);
@@ -28,9 +29,25 @@ client = function () {
         catch(function (err) {
             console.log(err);
         });
+} */
+
+
+var client = null;
+connect = async function () {
+    if (!client) {
+        client = await MongoClient.connect(url, options);
+    }
+
+    return {
+        db: client.db(process.env.MONGO_DBNAME),
+        client: client,
+    };
 }
 
+
+
 module.exports = {
-    client,
+    // mongooseClient,
+    connect,
 }
 
